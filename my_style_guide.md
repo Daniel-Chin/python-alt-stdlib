@@ -6,7 +6,6 @@ Later bullet points take precedence:
   - Notably, use the trailing commas in multi-line entries including function args (both def and call).  
 - Write what meta-programming would have produced. 
 - Vertical alignment is desirable. 
-- Function names are mixedCase. 
 - Comments don't have to be complete sentences. Shorter comments improve readability. 
 - Comments can be in Chinese if they correspond to another document in Chinese, e.g. a paper. 
 - Avoid abbreviations in names, unless they are well established. Long variable names usually don't affect readability, or even typability. 
