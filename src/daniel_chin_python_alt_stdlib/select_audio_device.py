@@ -72,13 +72,16 @@ def select_audio_device(
 
 def guess(devices: list[tuple[int, str]], targets: list[str]) -> int | None:
     for t in targets:
-        matches = [i for i, name in devices if t in name]
-        try:
-            index_, = matches
-        except ValueError:
-            return
-        else:
-            return index_
+        candidates = [i for i, name in devices if t in name]
+        for _ in range(2):
+            match candidates:
+                case []:
+                    break
+                case [x]:
+                    return x
+                case _:
+                    candidates = [i for i, name in devices if name == t]
+                    continue
     return
 
 if __name__ == '__main__':
