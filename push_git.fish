@@ -1,2 +1,2 @@
 #!/usr/bin/env fish
-python ./Push_Git.py
+uv run python ./Push_Git.py

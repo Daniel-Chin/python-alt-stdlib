@@ -4,7 +4,7 @@ Interactive git commit and push.
 from subprocess import Popen
 
 def main():
-    Popen(['python', 'compile_readme.py']).wait()
+    Popen(['uv', 'run', 'python', 'compile_readme.py']).wait()
     Popen(['git', 'add', '-A']).wait()
     Popen(['git', 'status']).wait()
     try:
