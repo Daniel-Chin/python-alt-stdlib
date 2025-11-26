@@ -17,13 +17,13 @@ Direction = tp.Literal['In', 'Out']
 
 def select_audio_device_input(
     pa: pyaudio.PyAudio, 
-    guesses: list[str] = ['Line', 'Headset', 'Microphone Array'], 
+    guesses: list[str] = ['default', 'Line', 'Headset', 'Microphone Array'], 
 ) -> int:
     return select_audio_device(pa, 'In',  guesses)
 
 def select_audio_device_output(
     pa: pyaudio.PyAudio, 
-    guesses: list[str] = ['VoiceMeeter Input'], 
+    guesses: list[str] = ['default', 'VoiceMeeter Input'], 
 ) -> int:
     return select_audio_device(pa, 'Out', guesses)
 
