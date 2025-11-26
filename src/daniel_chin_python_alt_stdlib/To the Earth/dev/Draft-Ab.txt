@@ -1,4 +1,4 @@
-ËãÁË¡£¾ö¶¨£¬Õâ¸öÓÎÏ·²»Ğ´ÁË¡£Ã»ÁÁµã¡£
+ç®—äº†ã€‚å†³å®šï¼Œè¿™ä¸ªæ¸¸æˆä¸å†™äº†ã€‚æ²¡äº®ç‚¹ã€‚
 
 Weapon:
 
@@ -34,10 +34,10 @@ Info...
 e.g. Weapon > Laser ...
 
 ai can attack, escape, hunt, trap. 
-Player ¸ù¾İAIĞĞÎª×Ô¼ºÅĞ¶Ï
-#Player Ò²¿ÉÒÔ Òş²Ø×Ô¼ºµÈ´ıAI½øÈëtrapÈ»ºóstrike
+Player æ ¹æ®AIè¡Œä¸ºè‡ªå·±åˆ¤æ–­
+#Player ä¹Ÿå¯ä»¥ éšè—è‡ªå·±ç­‰å¾…AIè¿›å…¥trapç„¶åstrike
 #No. you should encourage progressive gameplay
-#Ì«¸´ÔÓ£¡·ÅÆútracking hiding trapping. 
+#å¤ªå¤æ‚ï¼æ”¾å¼ƒtracking hiding trapping. 
 generally, hunting is more difficult than escaping. 
 hiding is easier than tracking. 
 AI of the same lv ship is weaker than player.

@@ -1,0 +1,18 @@
+  ------------------------===| To the Earth |===-----------------------    
+                                                                           
+   Distance from the Earth: XXX/XXX (-1)                                   
+   [||||||||||||_____________________________________________________]     
+                                                                           
+   Your HP: XXX/XXX (-4)              Enemy HP: XX/XXX (-3)               
+   [######################_________]  [XXX___________________________]     
+                                                                           
+   ---------------------------------  --------------------------------     
+   | Character Level:           XX |  | Weapon:               XXXXXX |    
+   | Accuracy:                 XXX |  | ATK:                    XXXX |     
+   | Evasion:                  XXX |  --------------------------------     
+   | Critical Hit Chance:      XXX |  Action menu: M:     Meditate         
+   | Critical Dmg Multiplier:   XX |               S:     Seek enemy       
+   ---------------------------------               T:     To the Earth     
+                                                   B:     Step back        
+   Enemy encountered: XXX!                                                 
+                                                                           

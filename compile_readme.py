@@ -44,28 +44,56 @@ SUPPRESS = [
 import sys
 import os
 from os import path
-from myfile import openAsciize
 import urllib.parse
 
 def main():
     os.chdir(path.dirname(path.abspath(__file__)))
-    with open('readme.md', 'w') as out:
-        with open('readme_head.md', 'r') as f:
+    with open('README.md', 'w', encoding='utf-8') as out:
+        with open('readme_head.md', 'r', encoding='utf-8') as f:
             out.write(f.read())
+        
+        print(file=out)
+        print('## Environment', file=out)
+        print('If you require this package, specify the correct extras yourself.  ', file=out)
+        print(file=out)
+        print('If you are me, run:  ', file=out)
+        print('`' + command_to_sync_all_optionals() + '`  ', file=out)
+
+        print(file=out)
+        print('## Documentation', file=out)
+        os.chdir('./src/daniel_chin_python_alt_stdlib')
         documentate('', out, depth = 1)
     input('Done. Enter...')
+
+def command_to_sync_all_optionals():
+    with open('./pyproject.toml', 'r') as f:
+        for line in f:
+            if line.strip() == '[project.optional-dependencies]':
+                break
+        optional_features = list[str]()
+        for line in f:
+            line = line.strip()
+            if line == '' or line[0] == '[':
+                break
+            feature, _ = line.split(' = ', 1)
+            optional_features.append(feature)
+    buf = ['uv', 'sync']
+    for feature in optional_features:
+        buf.append('--extra')
+        buf.append(feature)
+    return ' '.join(buf)
 
 def documentate(cd, out, depth, folder_documented = False):
     if depth >= 2:
         try:
-            with open('readme.md', 'r') as f:
-                print('##', cd, file = out)
+            with open('readme.md', 'r', encoding='utf-8') as f:
+                print('###', cd, file = out)
                 doc = f.read().strip()
                 if len(doc) < 3:
                     print('EMPTY README', cd)
                 out.write(doc)
                 out.write('\n\n')
-                out.write(f'[source code folder](https://github.com/Daniel-Chin/Python_Lib/blob/master/{urllib.parse.quote(cd)})')
+                out.write(f'[source code folder](./src/daniel_chin_python_alt_stdlib/{urllib.parse.quote(cd)})')
                 out.write('\n\n')
             folder_documented = True
         except:
@@ -74,10 +102,11 @@ def documentate(cd, out, depth, folder_documented = False):
         if path.isfile(node):
             ext = path.splitext(node)[-1]
             if ext in ('.py', '.txt', 'pyw'):
-                with openAsciize(node) as f:
+                # print('Processing', cd + node)
+                with open(node, 'r', encoding='utf-8') as f:
                     documented = False
                     for line in f:
-                        line = line.decode().strip('\r\n')
+                        line = line.strip('\r\n')
                         if line == "'''":
                             documented = True
                             break
@@ -85,15 +114,15 @@ def documentate(cd, out, depth, folder_documented = False):
                             continue
                         break
                     if documented:
-                        print('##', cd+node, file = out)
+                        print('###', cd+node, file = out)
                         buffer = []
                         for line in f:
-                            line = line.decode().strip('\r\n')
+                            line = line.strip('\r\n')
                             if line == "'''":
                                 break
                             buffer.append(line)
                         print(*buffer, file = out, end = '\n\n', sep = '  \n')
-                        out.write(f'[source code](https://github.com/Daniel-Chin/Python_Lib/blob/master/{urllib.parse.quote(cd + node)})')
+                        out.write(f'[source code](./src/daniel_chin_python_alt_stdlib/{urllib.parse.quote(cd + node)})')
                         out.write('\n\n')
                     else:
                         identifier = cd + node

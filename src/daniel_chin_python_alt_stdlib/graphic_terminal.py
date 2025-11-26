@@ -18,9 +18,9 @@ __all__ = [
 from typing import *
 from io import StringIO
 from functools import lru_cache
-
-from terminalsize import get_terminal_size
 from unicodedata import east_asian_width
+
+from .terminalsize import get_terminal_size
 
 def clearLine():
     '''

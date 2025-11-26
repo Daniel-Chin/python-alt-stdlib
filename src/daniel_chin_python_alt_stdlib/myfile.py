@@ -5,10 +5,11 @@ import os
 from os import path, listdir, rmdir, chdir, getcwd
 from os.path import isfile, isdir
 import argparse
-from interactive import listen
 import sys
 from io import BytesIO
 import hashlib
+
+from .interactive import listen
 
 def copy(src_name = None, dest_name = None):
     '''

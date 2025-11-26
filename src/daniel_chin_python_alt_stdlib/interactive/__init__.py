@@ -26,13 +26,15 @@ from .console_explorer import *
 from .cls import cls
 from colorama import init, Back, Fore, Style
 init()
-from terminalsize import get_terminal_size
-from graphic_terminal import *
 import string
 from time import monotonic as monoTime, sleep
 from sys import stdout
-from .kbhit import KBHit
 import platform
+
+from ..terminalsize import get_terminal_size
+from ..graphic_terminal import *
+
+from .kbhit import KBHit
 from . import key_codes as KEY_CODE
 
 FPS = 30
