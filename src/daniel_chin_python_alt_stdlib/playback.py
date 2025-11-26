@@ -3,26 +3,22 @@ Playback audio in real-time.
 Useful if you want to hear your doorbell while watching videos 
 with headphones.  
 '''
-print('importing...')
-import pyaudio
+
 from time import time, sleep
-import numpy as np
-from resampy import resample
 from threading import Lock
+
+import numpy as np
+import pyaudio
 import keyboard as kb
-try:
-    from interactive import listen
-    from selectAudioDevice import selectAudioDevice
-except ImportError as e:
-    module_name = e.msg.split('No module named ', 1)[1]
-    print(f'Missing module {module_name}. Please download at')
-    print('https://github.com/Daniel-Chin/Python_Lib')
-    input('Press Enter to quit...')
+
+from .interactive import listen
+from .select_audio_device import select_audio_device_input, select_audio_device_output
 
 MASTER_VOLUME = .2
 
 PAGE_LEN = 1024
-SR = 22050
+# SR = 22050
+SR = 48000
 DTYPE_BUF = np.float32
 DTYPE_IO = (np.int32, pyaudio.paInt32)
 
@@ -34,8 +30,9 @@ def main():
     global terminate_flag
     terminateLock.acquire()
     pa = pyaudio.PyAudio()
-    in_i, out_i = selectAudioDevice(pa)
-    in_i, out_i = None, None
+    in_i  = select_audio_device_input(pa)
+    out_i = select_audio_device_output(pa)
+    # in_i, out_i = None, None
     streamOutContainer.append(pa.open(
         format = DTYPE_IO[1], channels = 1, rate = SR, 
         output = True, frames_per_buffer = PAGE_LEN,
@@ -95,4 +92,5 @@ def onAudioIn(in_data, sample_count, *_):
         traceback.print_exc()
         return (None, pyaudio.paAbort)
 
-main()
+if __name__ == '__main__':
+    main()
