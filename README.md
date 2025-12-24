@@ -923,7 +923,8 @@ Creates a react component file containing boilerplate code.
 [source code](./src/daniel_chin_python_alt_stdlib/reactNew.py)
 
 ### render_markdown_line_breaking.py
-A text-to-text render of markdown that handles line breaking.  
+A text-to-text render of markdown that handles line breaking.    
+Removes all indentation.  
 
 [source code](./src/daniel_chin_python_alt_stdlib/render_markdown_line_breaking.py)
 

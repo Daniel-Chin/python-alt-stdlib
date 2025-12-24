@@ -1,5 +1,6 @@
 '''
 A text-to-text render of markdown that handles line breaking.  
+Removes all indentation.  
 '''
 
 def render_markdown_line_breaking(raw: str) -> str:
