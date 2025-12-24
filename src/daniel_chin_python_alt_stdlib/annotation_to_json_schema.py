@@ -22,6 +22,8 @@ Recursive list types? Undefined behavior. Probably stack overflow,
 or Ctrl+C to see huge stack. So it's diagnosable downstream.  
 '''
 
+# from __future__ import annotations  # stress test
+
 import typing as tp
 import types
 import builtins
@@ -34,6 +36,7 @@ LOOKUP = {
 }
 
 def non_null_to_json_schema(anno: tp.Any, /) -> dict[str, tp.Any]:
+    # print('non_null_to_json_schema', type(anno))
     match anno:
         case builtins.int | builtins.float | builtins.str | builtins.bool:
             return dict(
@@ -74,11 +77,12 @@ def non_null_to_json_schema(anno: tp.Any, /) -> dict[str, tp.Any]:
                         enum=list(enums),
                     )
                 case _:
-                    raise TypeError(f'Unsupported generic type: {origin}')
+                    raise TypeError(f'Unsupported generic type: {origin!r}')
         case _:
-            raise TypeError(f'Unsupported type annotation: {anno}')
+            raise TypeError(f'Unsupported type annotation: {anno!r}')
 
 def maybe_null_to_json_schema(anno: tp.Any, /) -> dict[str, tp.Any]:
+    # print('maybe_null_to_json_schema', type(anno))
     origin = tp.get_origin(anno)
     if origin is types.UnionType or origin is tp.Union:
         args = tp.get_args(anno)
@@ -90,6 +94,7 @@ def maybe_null_to_json_schema(anno: tp.Any, /) -> dict[str, tp.Any]:
         return non_null_to_json_schema(anno)
 
 def annotation_to_json_schema(anno: tp.Any, /) -> dict[str, tp.Any]:
+    # print('annotation_to_json_schema', type(anno))
     if isinstance(anno, tp._AnnotatedAlias):    # type: ignore
         inner, description = tp.get_args(anno)
         return dict(
@@ -106,7 +111,6 @@ def extract_nullable(*types_: tp.Any) -> tp.Any:
         raise TypeError('We don\'t yet support unions beyond nullable.')
 
 def test():
-    import inspect
     from pprint import pprint
 
     def f(
@@ -120,19 +124,23 @@ def test():
         ]], "Historic angles"] = [3.14],
         c: str = "Hello, World!",
         aa: tp.Literal['A', 'B', 'C'] = 'A',
+        ab: tp.Annotated[tp.Literal[3, 4], "Number of apples"] = 3, 
     ) -> int:
         '''
         Goes to the Moon.  
         '''
         return 42
     
-    for name, param in inspect.signature(f).parameters.items():
+    for name, anno in tp.get_type_hints(f, include_extras=True).items():
+        if name == 'return':
+            continue
         print(f"Parameter: {name}")
         try:
-            pprint(annotation_to_json_schema(param.annotation))
+            pprint(annotation_to_json_schema(anno))
         except TypeError:
             print('invalid')
-            assert name == 'g'
+            if name != 'g':
+                raise
         else:
             assert name != 'g'
         print()
