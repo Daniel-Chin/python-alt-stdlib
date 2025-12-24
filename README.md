@@ -215,6 +215,31 @@ Added support for linux because aur/timer doesn't support repeating until dismis
 
 [source code](./src/daniel_chin_python_alt_stdlib/alarm.py)
 
+### annotation_to_json_schema.py
+Converts annotated Python functions into JSON Schema representations.    
+  
+Handles annotation `T` where `T` is one of:    
+- Primitive: `int`, `float`, `str`, `bool`.    
+- Typed list: `list[T]`, `tp.List[T]`.    
+- "Metadata" dict: `dict[str, tp.Any]`, `tp.Dict[str, tp.Any]`.    
+- Nullable: `tp.Optional[T]`, `T | None`, `tp.Union[T, None]`.    
+- Literal enum: `tp.Literal[..., ...]`.    
+- Annotated: `tp.Annotated[T, description: str]`.    
+  
+In particular, doesn't support:   
+- NamedTuple, TypedDict. This is a todo.    
+- Union beyond nullable.    
+- `tp.Any`.    
+- `list[tp.Any]`.    
+- Dict beyond `str -> tp.Any`.    
+- Tuple.    
+- Enum.    
+  
+Recursive list types? Undefined behavior. Probably stack overflow,   
+or Ctrl+C to see huge stack. So it's diagnosable downstream.  
+
+[source code](./src/daniel_chin_python_alt_stdlib/annotation_to_json_schema.py)
+
 ### ascii_table.py
 A beautiful script to print the ascii table. 
 
@@ -896,6 +921,11 @@ e.g. Win+R py -m rand
 Creates a react component file containing boilerplate code.  
 
 [source code](./src/daniel_chin_python_alt_stdlib/reactNew.py)
+
+### render_markdown_line_breaking.py
+A text-to-text render of markdown that handles line breaking.  
+
+[source code](./src/daniel_chin_python_alt_stdlib/render_markdown_line_breaking.py)
 
 ### roundRobinSched.py
 Time-based round robin scheduling.  
