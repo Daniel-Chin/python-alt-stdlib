@@ -924,7 +924,8 @@ Creates a react component file containing boilerplate code.
 
 ### render_markdown_line_breaking.py
 A text-to-text render of markdown that handles line breaking.    
-Removes all indentation.  
+Removes all indentation.    
+Some string operations are not the most efficient. Readability first.  
 
 [source code](./src/daniel_chin_python_alt_stdlib/render_markdown_line_breaking.py)
 
