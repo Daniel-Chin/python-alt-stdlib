@@ -6,15 +6,17 @@ Handles annotation `T` where `T` is one of:
 - Typed list: `list[T]`, `tp.List[T]`.  
 - "Metadata" dict: `dict[str, tp.Any]`, `tp.Dict[str, tp.Any]`.  
 - Nullable: `tp.Optional[T]`, `T | None`, `tp.Union[T, None]`.  
+- Literal enum: `tp.Literal[..., ...]`.  
 - Annotated: `tp.Annotated[T, description: str]`.  
 
-Doesn't support: 
+In particular, doesn't support: 
 - NamedTuple, TypedDict. This is a todo.  
 - Union beyond nullable.  
 - `tp.Any`.  
 - `list[tp.Any]`.  
 - Dict beyond `str -> tp.Any`.  
 - Tuple.  
+- Enum.  
 
 Recursive list types? Undefined behavior. Probably stack overflow, 
 or Ctrl+C to see huge stack. So it's diagnosable downstream.  
@@ -24,23 +26,18 @@ import typing as tp
 import types
 import builtins
 
+LOOKUP = {
+    builtins.int  : 'integer',
+    builtins.float: 'number',
+    builtins.str  : 'string',
+    builtins.bool : 'boolean',
+}
+
 def non_null_to_json_schema(anno: tp.Any, /) -> dict[str, tp.Any]:
     match anno:
-        case builtins.int:
+        case builtins.int | builtins.float | builtins.str | builtins.bool:
             return dict(
-                type='integer',
-            )
-        case builtins.float:
-            return dict(
-                type='number',
-            )
-        case builtins.str:
-            return dict(
-                type='string',
-            )
-        case builtins.bool:
-            return dict(
-                type='boolean',
+                type=LOOKUP[anno],
             )
         case types.GenericAlias() | tp._GenericAlias(): # type: ignore
             origin = tp.get_origin(anno)
@@ -66,6 +63,15 @@ def non_null_to_json_schema(anno: tp.Any, /) -> dict[str, tp.Any]:
                         raise TypeError('You should use TypedDict instead. Unfortunately we don\'t support TypedDict yet. So just use `dict[str, tp.Any]`.')
                     return dict(
                         type='object',
+                    )
+                case tp.Literal:
+                    enums = tp.get_args(anno)
+                    unique_types = {type(e) for e in enums}
+                    if len(unique_types) != 1:
+                        raise TypeError('All Literal enum values must have the same type.')
+                    return dict(
+                        type=LOOKUP[unique_types.pop()],
+                        enum=list(enums),
                     )
                 case _:
                     raise TypeError(f'Unsupported generic type: {origin}')
@@ -113,6 +119,7 @@ def test():
             float, "Angle between John and Mary", 
         ]], "Historic angles"] = [3.14],
         c: str = "Hello, World!",
+        aa: tp.Literal['A', 'B', 'C'] = 'A',
     ) -> int:
         '''
         Goes to the Moon.  
