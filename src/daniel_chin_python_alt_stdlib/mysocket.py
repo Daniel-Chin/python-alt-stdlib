@@ -3,11 +3,10 @@ My socket utils. Provides `recvall`, `recvFile`, `sendFileJdt`, and `findAPort`.
 '''
 from __future__ import annotations
 
-from typing import *
 import os
 from os.path import getsize
 from time import time
-from socket import socket, timeout as SocketTimeout
+from socket import socket
 import jdt
 from pickle_socket import PickleSocket
 from interactive import inputUntilValid, inputChin
@@ -38,35 +37,12 @@ def recvFile(s, file_len, to_filename, accept_double_dot = False):
                 j.update(file_len - left)
         j.complete()
 
-def recvall(s: socket, size: int, *args, **kw):
-    """
+def recvall(s: socket, size: int) -> bytes:
+    '''
     Receive `size` bytes from socket `s`.  
     Fully blocking. Does not support timeout.  
-    """
-    # def warnLegacy():
-    #     print('Warning: You are using the legacy signature of recvall.')
-    # try:
-    #     kw['timeout'] = args[0]
-    # except IndexError:
-    #     pass
-    # try:
-    #     kw['dt'] = args[1]
-    # except IndexError:
-    #     pass
-    # try:
-    #     timeout = kw['timeout']
-    # except KeyError:
-    #     pass
-    # else:
-    #     warnLegacy()
-    #     if timeout is None:
-    #         return recvall(s, size)
-    #     else:
-    #         raise NotImplementedError('Exact timeout behavior of legacy not well-defined.')
-    # if 'dt' in kw:
-    #     warnLegacy()
-
-    assert s.timeout is None
+    '''
+    assert s.gettimeout() is None
     buffer = memoryview(bytearray(size))
     cursor = 0
     while cursor != size:
@@ -77,7 +53,7 @@ def recvall(s: socket, size: int, *args, **kw):
     return buffer.tobytes()
 
 def recvallintoWithTimeout(
-    s: socket, size: int, buffer: memoryview, cursor: List[int], 
+    s: socket, size: int, buffer: memoryview, cursor: list[int], 
 ):
     """
     Receive `size` bytes from socket `s` into `buffer`.  
@@ -85,7 +61,7 @@ def recvallintoWithTimeout(
     Note that if timeout occurs, some bytes may have been consumed and not available in the socket. You can recover the state by examining `cursor[0]` and the partially-filled `buffer`.  
     """
     cursor[0] = 0
-    timeout = s.timeout
+    timeout = s.gettimeout()
     assert timeout is not None
     deadline = time() + timeout
     try:
