@@ -1,4 +1,6 @@
 '''
+Deprecated in favor of contextlib.chdir in Python 3.11+  
+
 A context to temporarily cd to another directory.  
 Frequently useful: ChdirAlongside(__file__)  
 '''
