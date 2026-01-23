@@ -3,13 +3,13 @@ Uses mido to play a midi file.
 '''
 
 from __future__ import annotations
-
 import typing as tp
 import time
 
 import mido
-from myfile import sysArgvOrInput
-from interactive import inputChin
+
+from .myfile import sysArgvOrInput
+from .interactive import inputChin
 
 def any2zero(x: int):   # an example channel remap
     return 0
