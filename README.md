@@ -856,10 +856,10 @@ pip install, and imports
 
 [source code](./src/daniel_chin_python_alt_stdlib/pimport.py)
 
-### playMidi.py
+### play_midi.py
 Uses mido to play a midi file.  
 
-[source code](./src/daniel_chin_python_alt_stdlib/playMidi.py)
+[source code](./src/daniel_chin_python_alt_stdlib/play_midi.py)
 
 ### playback.py
 Playback audio in real-time.    
