@@ -60,7 +60,7 @@ def select_audio_device(
     print(direction + 'put Devices:')
     for i in relevant_indices:
         print(i, devices[i])
-    selected = int(inputChin('select input device: ', default))
+    selected = int(inputChin(f'select {direction}put device: ', default))
     print()
     print(direction + 'put device:', devices[selected])
 
