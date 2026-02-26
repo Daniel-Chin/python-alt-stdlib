@@ -34,13 +34,15 @@ class ArgParser:
         args = parser.parse_args()
 
         self.baud_rate: int = args.baud_rate
-        self.port_names: str = args.port_names
+        assert self.baud_rate is not None
+        self.port_names: list[str] = args.port_names
+        assert self.port_names is not None
 
 def syncPrint(*args, **kw):
     with printLock:
         print(*args, **kw)
 
-def main(port_names: List[str], baud_rate: int):
+def main(port_names: list[str], baud_rate: int):
     global should_exit
 
     colorama.init()
@@ -92,6 +94,7 @@ class OnePort(Thread):
                     def flush():
                         nonlocal line_birth
 
+                        assert line_birth is not None
                         timestamp = datetime.fromtimestamp(
                             line_birth, 
                         ).strftime('%H:%M:%S')
