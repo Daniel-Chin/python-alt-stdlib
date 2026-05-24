@@ -1,5 +1,5 @@
 import platform
-from interactive import inputChin
+from daniel_chin_python_alt_stdlib.interactive import inputChin
 from .kernal import Kernal
 import random
 
