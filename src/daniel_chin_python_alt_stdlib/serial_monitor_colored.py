@@ -6,8 +6,10 @@ Features:
 - Color formatting.  
 - Attach a time stamp to each line.  
 - Merge multiple ports into one terminal.  
+- A fringe feature allowing custom RTS DTR sequences for hardware engineers that messed up their devkit design.
 '''
-from typing import *
+
+import typing as tp
 from time import sleep, time
 from datetime import datetime
 import argparse
@@ -21,6 +23,8 @@ MAX_LINE_WAIT_TIME = .3
 
 printLock = Lock()
 should_exit = False
+
+PortInitCallback = tp.Callable[[serial.Serial], None]
 
 class ArgParser:
     def __init__(self):
@@ -42,13 +46,16 @@ def syncPrint(*args, **kw):
     with printLock:
         print(*args, **kw)
 
-def main(port_names: list[str], baud_rate: int):
+def main(
+    port_names: list[str], baud_rate: int, 
+    init_callback: PortInitCallback | None = None, 
+):
     global should_exit
 
     colorama.init()
     threads = []
     for port_name in port_names:
-        thread = OnePort(port_name, baud_rate)
+        thread = OnePort(port_name, baud_rate, init_callback)
         thread.start()
         threads.append(thread)
     try:
@@ -66,10 +73,14 @@ def main(port_names: list[str], baud_rate: int):
         print('released.')
 
 class OnePort(Thread):
-    def __init__(self, port_name: str, baud_rate: int):
+    def __init__(
+        self, port_name: str, baud_rate: int, 
+        init_callback: PortInitCallback | None = None,
+    ):
         super().__init__()
         self.port_name = port_name
         self.baud_rate = baud_rate
+        self.init_callback = init_callback
     
     def run(self):
         colorama.init()
@@ -82,6 +93,8 @@ class OnePort(Thread):
                     self.port_name, self.baud_rate, 
                     timeout=MAX_LINE_WAIT_TIME, 
                 ) as s:
+                    if self.init_callback is not None:
+                        self.init_callback(s)
                     syncPrint(
                         '', 
                         f'Serial opened: {s.name}', 
