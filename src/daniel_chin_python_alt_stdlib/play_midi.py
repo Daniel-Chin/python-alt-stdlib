@@ -57,6 +57,8 @@ def main(
                         msg.channel = new_channel
                     except AttributeError:
                         pass    # allow control_change
+                    # if msg.type == 'control_change':
+                    #     continue    # skip control_change
                     port.send(msg)
                     if msg.type == 'note_on' and msg.velocity != 0:
                         down_keys.add(msg.note)
